@@ -1,0 +1,67 @@
+@Chapter Tutorial
+
+@Section Using QuickCheck
+
+QuickCheck works by running a given function and checking it always returns true.
+
+Let's consider testing if $a*b = b*a$. We can test this using QC_Check. QC_Check has two mandatory arguments: The second is the function to call, and the first is the types of the arguments for this function.
+
+@BeginExample
+testFunc := function(a,b)
+    return a*b = b*a;
+end;;
+
+QC_Check([IsInt, IsInt], testFunc);
+#! true
+@EndExample
+
+Of course, we can also test this function with other types, which are not associative.
+
+@BeginExample
+QC_Check([IsPermutation, IsPermutation], testFunc);
+#! Test 0 of 100 failed:
+#!  Input: [ (1,8,7,4,9,6,3,2,5), (1,3,7,2,6,9)(4,8,5) ]
+#!  Output: false
+#! false
+@EndExample
+
+Rather than returning false, you can return a string. 
+
+@Section Valid argument types for QuickCheck
+
+The currently allowed argument types for QuickCheck are:
+
+* IsInt : An integer
+* IsPosInt : A positive integer
+* IsNegInt : A negative integer
+* IsEvenInt : An even integer
+* IsOddInt : An odd integer
+* IsPerm : A permutation
+* IsTransformation : A transformation
+* IsPermGroup : A permutation group
+
+There are ways of defining a recursive structure:
+
+* QC_ListOf(x) : A list of items of type x
+* QC_SetOf(x) : A set of items of type x
+* QC_PairOf(x) : A pair of items of type x
+* QC_FixedLengthListOf(x, len) : A list of length len of items of type x
+
+In some cases this may not be sufficient -- for example an algorithm may require an integer which is not prime. The function can return the special value QC_Skip, which skips this test. If too many tests are skipped, the tester will eventually stop generating new arguments. For example, if we want to check the AlternatingGroup(n) is a strict subgroup of the SymmetricGroup(n) for n > 2.
+
+@BeginExample
+func := function(x)
+    local a, s;
+    if x < 2 then
+        return QC_Skip;
+    fi;
+    a := AlternatingGroup(x);
+    s := SymmetricGroup(x);
+    if not IsSubgroup(s, a) then return "Not a subgroup"; fi;
+    if s = a then return "Equal!"; fi;
+    return true;
+end;;
+
+QC_Check([IsInt], func);
+#! true
+@EndExample
