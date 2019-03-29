@@ -65,3 +65,35 @@ end;;
 QC_Check([IsInt], func);
 #! true
 @EndExample
+
+@Section Adding new types of QuickCheck
+
+QuickCheck takes a list of the arguments for the function to be tested, so it needs to know how to generate values of any given type. There is a built-in list of types and new ones can be easily added.
+
+All value generators are a function which takes two arguments -- the first is a RandomSource, and the second is a positive integer representing the maximum "size" of the value created (each type can choose how to interpret this).
+
+For example, here are generators for a positive integer and a permutation.
+
+@BeginExample
+makePosInt := function(rs, limit)
+    return Random(rs, [1..limit]);
+end;
+
+makePerm := function(rs, limit)
+    return Random(rs, SymmetricGroup(limit));
+end;
+@EndExample
+
+These functions can be used immediately in QC_Check:
+
+@BeginExample
+# Check a simple property of permutations
+QC_Check([makePosInt, makePerm, makePerm], {r,p1,p2} -> (r^p1)^p2 = r^(p1*p2));
+#! true
+@EndExample
+
+When defining methods and attributes in GAP, filters are often used, such as IsPermGroup, or IsInt. QuickCheck can automatically map filters to a function. Filters are registered using the QC_RegisterFilterGen function.
+
+@BeginLog
+QC_RegisterFilterGen(IsPosInt, makePosInt);
+@EndLog
