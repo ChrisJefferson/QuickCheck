@@ -65,7 +65,14 @@ InstallGlobalFunction(QC_Check,
         skipCount := 0;
         while testCount < config.tests and skipCount < config.tests * 100 do
             args := List(argtypes, {a} -> QC_MakeRandomArgument(a, rg, config.limit));
-            ret := CallFuncList(func, StructuralCopy(args));
+            ret := CallFuncListWrap(func, StructuralCopy(args));
+            if IsEmpty(ret) then
+                PrintFormatted("Test {} of {} did not return a value", testCount, config.tests);
+                return false;
+            fi;
+
+            ret := ret[1];
+
             if ret = QC_Skip then
                 skipCount := skipCount + 1;
             elif ret <> true then
@@ -90,11 +97,19 @@ InstallGlobalFunction(QC_CheckEqual,
 
         funccheck := function(args...)
             local retL, retR;
-            retL := CallFuncList(funcL, StructuralCopy(args));
-            retR := CallFuncList(funcR, args);
+            retL := CallFuncListWrap(funcL, StructuralCopy(args));
+            retR := CallFuncListWrap(funcR, args);
             if retL = QC_Skip or retL = QC_Skip then
                 return QC_Skip;
             fi;
+
+            if IsEmpty(retL) or IsEmpty(retR) then
+                return "A least one function did no return a value";
+            fi;
+
+            retL := retL[1];
+            retR := retR[1];
+
             if retL = retR then
                 return true;
             fi;
