@@ -13,16 +13,18 @@ QC_RegisterFilterGen(IsTransformation, function(rg, limit)
 
 # TODO: Improve greatly
 QC_RegisterFilterGen(IsPermGroup, function(rg, limit)
-    local size;
+    local size, ret;
     size := Random(rg, [1..limit]);
     if size = 1 then
-        return SymmetricGroup(1);
-    fi;
-    if Random(rg, [1..5]) = 1 then
-        return PrimitiveGroup(size, Random(rg, [1..NrPrimitiveGroups(size)]));
+        ret := SymmetricGroup(1);
+    elif Random(rg, [1..5]) = 1 then
+        ret := PrimitiveGroup(size, Random(rg, [1..NrPrimitiveGroups(size)]));
     else
-        return TransitiveGroup(size, Random(rg, [1..NrTransitiveGroups(size)]));
+        ret := TransitiveGroup(size, Random(rg, [1..NrTransitiveGroups(size)]));
     fi;
+
+    # Want to remove name, for useful printing
+    return Group(GeneratorsOfGroup(ret),());
 end);
 
 QC_ListOf := function(object)
