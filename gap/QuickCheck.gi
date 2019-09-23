@@ -55,7 +55,7 @@ end;
 
 InstallGlobalFunction(QC_Check,
     function(argtypes, func, configarg...)
-        local testCount, skipCount, args, rg, call, ret, config;
+        local testCount, skipCount, args, rg, call, ret, config, testSize;
 
         config := _QC.fillConfig(configarg);
 
@@ -64,7 +64,9 @@ InstallGlobalFunction(QC_Check,
         testCount := 0;
         skipCount := 0;
         while testCount < config.tests and skipCount < config.tests * 100 do
-            args := List(argtypes, {a} -> QC_MakeRandomArgument(a, rg, config.limit));
+            # start with smaller sized tests
+            testSize := Minimum(testCount+1, config.limit);
+            args := List(argtypes, {a} -> QC_MakeRandomArgument(a, rg, testSize));
             ret := CallFuncListWrap(func, StructuralCopy(args));
             if IsEmpty(ret) then
                 PrintFormatted("Test {} of {} did not return a value", testCount, config.tests);
