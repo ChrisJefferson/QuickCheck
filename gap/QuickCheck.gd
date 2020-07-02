@@ -34,9 +34,26 @@ DeclareGlobalFunction("QC_Check");
 #! Check that, given the same list of arguments, functionL and functionR
 #! return the same value.
 #! in <A>arguments</A>.
-#! Arguments arguments, functionL, functionR,[, config]
+#! Arguments arguments, functionL, functionR[, config]
 
 DeclareGlobalFunction("QC_CheckEqual");
+
+#! @Description
+#! Set config options for QuickCheck globally, by passing a record. It is not required
+#! to set all options.
+#!
+#! Current options are:
+#!  * <C>tests</C>: Number of tests to run
+#!  * <C>limit</C>: The size of the largest object to create
+#!  * <C>seed</C>: Initial random seed
+#!
+#! Arguments  config
+DeclareGlobalFunction("QC_SetConfig");
+
+
+#! @Description
+#! Get the current global configuration for QuickCheck, as a record
+DeclareGlobalFunction("QC_GetConfig");
 
 
 ## For private data

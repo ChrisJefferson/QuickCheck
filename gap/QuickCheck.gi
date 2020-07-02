@@ -53,6 +53,13 @@ _QC.fillConfig := function(configlist)
     return retval;
 end;
 
+InstallGlobalFunction(QC_SetConfig,
+    function(config)
+        _QC.defaultConfig := _QC.fillConfig([config]);
+    end);
+
+InstallGlobalFunction(QC_GetConfig, {} -> ShallowCopy(_QC.defaultConfig));
+
 InstallGlobalFunction(QC_Check,
     function(argtypes, func, configarg...)
         local testCount, skipCount, args, rg, call, ret, config, testSize;
