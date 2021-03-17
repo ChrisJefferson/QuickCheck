@@ -56,3 +56,7 @@ QC_SetOf := function(object)
         return set;
     end;
 end;
+
+
+QC_RegisterFilterGen(IsCyclic, {rg, limit} -> CyclicGroup(Random(rg, [1..limit])));
+QC_RegisterFilterGen(IsFreeAbelian, {rg, limit} -> FreeAbelianGroup(Random(rg, [1..limit])));
