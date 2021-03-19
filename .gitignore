@@ -17,6 +17,9 @@
 /doc/*.six
 /doc/*.tex
 /doc/*.toc
+/doc/_*.xml
+/doc/QuickCheck.xml
+/doc/title.xml
 /doc/manual.pdf
 
 /bin/
