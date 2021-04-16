@@ -3,13 +3,20 @@
 #
 #! @Chapter Introduction
 #!
-#! QuickCheck is a package which does some
-#! interesting and cool things
+#! QuickCheck is a package which tests a function by giving it
+#! many randomly generated inputs. It can either check one function returns
+#! 'true', or check two functions return the same value.
+#!
+#! It is designed to provide a fast way to test a function with many inputs,
+#! including "boring" (but easy to get wrong) cases, such as empty lists, or the
+#! identity group.
+#!
+#! @Chapter Tutorial
 #!
 #! @Chapter Functionality
 #!
 #!
-#! @Section Example Methods
+#! @Section Methods
 #!
 #! This section will describe the example
 #! methods of QuickCheck
@@ -35,8 +42,17 @@ DeclareGlobalFunction("QC_Check");
 #! return the same value.
 #! in <A>arguments</A>.
 #! Arguments arguments, functionL, functionR[, config]
-
 DeclareGlobalFunction("QC_CheckEqual");
+
+#! @Description
+#! Return the function called, and arguments given, last time a QuickCheck
+#! test failed.
+#!
+#! Returns a record containing `args` (the arguments) and a function `func`
+#! (if `QC_Check` failed) or a list of functions `funcs` (if `QC_CheckEqual` failed).
+#! Returns `false` if no test has failed.
+DeclareGlobalFunction("QC_LastFailure");
+
 
 #! @Description
 #! Set config options for QuickCheck globally, by passing a record. It is not required

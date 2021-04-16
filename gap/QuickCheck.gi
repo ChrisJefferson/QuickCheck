@@ -31,7 +31,7 @@ InstallGlobalFunction(QC_MakeRandomArgument,
         fi;
     end);
 
-_QC.defaultConfig := rec(tests := 100, limit := 9, seed := 1);
+_QC.defaultConfig := rec(tests := 500, limit := 9, ramp:= 30, seed := 1);
 
 _QC.fillConfig := function(configlist)
     local r, retval, config;
@@ -60,8 +60,11 @@ InstallGlobalFunction(QC_SetConfig,
 
 InstallGlobalFunction(QC_GetConfig, {} -> ShallowCopy(_QC.defaultConfig));
 
-InstallGlobalFunction(QC_Check,
-    function(argtypes, func, configarg...)
+InstallGlobalFunction(QC_LastFailure, {} -> _QC.LastFailure);
+
+_QC.LastFailure := false;
+
+_QC.Check := function(argtypes, func, configarg...)
         local testCount, skipCount, args, rg, call, ret, config, testSize;
 
         config := _QC.fillConfig(configarg);
@@ -72,8 +75,9 @@ InstallGlobalFunction(QC_Check,
         skipCount := 0;
         while testCount < config.tests and skipCount < config.tests * 100 do
             # start with smaller sized tests
-            testSize := Minimum(testCount+1, config.limit);
+            testSize := Minimum(Int(testCount/config.ramp)+1, config.limit);
             args := List(argtypes, {a} -> QC_MakeRandomArgument(a, rg, testSize));
+            _QC.LastFailure.args := StructuralCopy(args);
             ret := CallFuncListWrap(func, StructuralCopy(args));
             if IsEmpty(ret) then
                 PrintFormatted("Test {} of {} did not return a value", testCount, config.tests);
@@ -98,11 +102,27 @@ InstallGlobalFunction(QC_Check,
             return false;
         fi;
         return true;
+end;
+
+InstallGlobalFunction(QC_Check,
+    function(argtypes, func, configarg...)
+        local ret, savefailure;
+        savefailure := _QC.LastFailure;
+        _QC.LastFailure := rec(func := func);
+        ret := CallFuncList(_QC.Check, Concatenation([argtypes, func], configarg));
+        if ret then
+            _QC.LastFailure := savefailure;
+        fi;
+        return ret;
 end);
+
 
 InstallGlobalFunction(QC_CheckEqual,
     function(argtypes, funcL, funcR, configarg...)
-        local funccheck;
+        local funccheck, ret, savefailure;
+        
+        savefailure := _QC.LastFailure;
+        _QC.LastFailure := rec(funcs := [funcL, funcR]);
 
         funccheck := function(args...)
             local retL, retR;
@@ -124,5 +144,9 @@ InstallGlobalFunction(QC_CheckEqual,
             fi;
             return StringFormatted("Return values differ: {} and {}", retL, retR);
         end;
-        return CallFuncList(QC_Check, Concatenation([argtypes, funccheck], configarg));
+        ret := CallFuncList(_QC.Check, Concatenation([argtypes, funccheck], configarg));
+        if ret then
+            _QC.LastFailure := savefailure;
+        fi;
+        return ret;
 end);

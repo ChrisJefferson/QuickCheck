@@ -1,8 +1,8 @@
 #
 # QuickCheck: Randomised Testing for GAP Functions
 #
-# This directory aims to test GAP, rather than the QuickCHeck
-# Package.
+# This directory gives a variety of tests for GAP itself, showing
+# how QuickCheck can be used in practice.
 #
 LoadPackage( "QuickCheck" );
 
