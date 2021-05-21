@@ -55,6 +55,11 @@ DeclareGlobalFunction("QC_LastFailure");
 
 
 #! @Description
+#! Rerun the last test which failed. This is most useful of a test in a '.tst' file
+#! failed, as this will allow the test to enter the break loop.
+DeclareGlobalFunction("QC_RerunLastFailure");
+
+#! @Description
 #! Set config options for QuickCheck globally, by passing a record. It is not required
 #! to set all options.
 #!

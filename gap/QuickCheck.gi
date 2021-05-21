@@ -60,12 +60,10 @@ InstallGlobalFunction(QC_SetConfig,
 
 InstallGlobalFunction(QC_GetConfig, {} -> ShallowCopy(_QC.defaultConfig));
 
-InstallGlobalFunction(QC_LastFailure, {} -> _QC.LastFailure);
-
-_QC.LastFailure := false;
+_QC.LastFailure := rec();
 
 _QC.Check := function(argtypes, func, configarg...)
-        local testCount, skipCount, args, rg, call, ret, config, testSize;
+        local testCount, skipCount, args, rg, call, ret, config, testSize, breakOnError, instream;
 
         config := _QC.fillConfig(configarg);
 
@@ -77,10 +75,28 @@ _QC.Check := function(argtypes, func, configarg...)
             # start with smaller sized tests
             testSize := Minimum(Int(testCount/config.ramp)+1, config.limit);
             args := List(argtypes, {a} -> QC_MakeRandomArgument(a, rg, testSize));
-            _QC.LastFailure.args := StructuralCopy(args);
-            ret := CallFuncListWrap(func, StructuralCopy(args));
+            _QC.PreviousArguments := StructuralCopy(args);
+            breakOnError := BreakOnError;
+            BreakOnError := false;
+            _QC.Function := func;
+            _QC.Args := StructuralCopy(args);
+            Unbind(_QC.Ret);
+            instream := InputTextString("_QC.Ret := CallFuncListWrap(_QC.Function, _QC.Args);;");
+            READ_STREAM_LOOP(instream, OutputTextUser());
+            BreakOnError := breakOnError;
+            
+            if IsBound(_QC.Ret) then
+                ret := _QC.Ret;
+            else
+                ret := [];
+            fi;
+            CloseStream(instream);
+            Unbind(_QC.Ret); 
+            # We leave _QC.Args and _QC.Function, so they can be returned by QC_LastFailure
+
             if IsEmpty(ret) then
-                PrintFormatted("Test {} of {} did not return a value", testCount, config.tests);
+                PrintFormatted("Test {} of {} did not return a value\n", testCount, config.tests);
+                Print(" Input: ", args, "\n");
                 return false;
             fi;
 
@@ -98,9 +114,10 @@ _QC.Check := function(argtypes, func, configarg...)
             fi;
         od;
         if testCount < config.tests then
-            PrintFormatted("Too many tests skipped. Only managed {} out of {} tests", testCount, config.tests);
+            PrintFormatted("Too many tests skipped. Only managed {} out of {} tests\n", testCount, config.tests);
             return false;
         fi;
+        Unbind(_QC.PreviousArguments);
         return true;
 end;
 
@@ -149,4 +166,22 @@ InstallGlobalFunction(QC_CheckEqual,
             _QC.LastFailure := savefailure;
         fi;
         return ret;
+end);
+
+InstallGlobalFunction(QC_LastFailure,
+    function()
+    if IsBound(_QC.Args) then
+        return rec(func := _QC.Function, args := _QC.Args);
+    else
+        return fail;
+    fi;
+end);
+
+InstallGlobalFunction(QC_RerunLastFailure,
+    function()
+    if IsBound(_QC.Args) then
+        return CallFuncList(_QC.Function, _QC.Args);
+    else
+        return fail;
+    fi;
 end);
