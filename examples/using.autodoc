@@ -83,8 +83,8 @@ The currently allowed argument types for QuickCheck are:
 
 There are also ways of defining lists or sets of arguments, recursively:
 
-* QC_ListOf(x) : A list of items of type x
-* QC_SetOf(x) : A set of items of type x
+* QC_ListOf(x) : A (possibly empty) list of items of type x
+* QC_SetOf(x) : A (possibly empty) set of items of type x
 * QC_PairOf(x) : A pair of items of type x
 * QC_FixedLengthListOf(x, len) : A list of length len of items of type x
 
