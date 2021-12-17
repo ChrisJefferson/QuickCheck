@@ -29,7 +29,7 @@ end);
 
 QC_ListOf := function(object)
     return function(rg, limit)
-        return List([1..Random([1..limit])], {x} -> QC_MakeRandomArgument(object, rg, limit));
+        return List([1..Random([0..limit])], {x} -> QC_MakeRandomArgument(object, rg, limit));
     end;
 end;
 
@@ -45,7 +45,7 @@ QC_PairOf := {o} -> QC_FixedLengthListOf(o, 2);
 QC_SetOf := function(object)
     return function(rg, limit)
         local set, targetsize, testlimit;
-        targetsize := Random([1..limit]);
+        targetsize := Random([0..limit]);
         set := [];
         # In case we have trouble filling the set, put a limit on number of tests
         testlimit := targetsize * limit + 10;
