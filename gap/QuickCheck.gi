@@ -31,7 +31,7 @@ InstallGlobalFunction(QC_MakeRandomArgument,
         fi;
     end);
 
-_QC.defaultConfig := rec(tests := 500, limit := 9, ramp:= 30, seed := 1);
+_QC.defaultConfig := rec(tests := 500, limit := 9, ramp:= 30, seed := 1, catchErrors := true);
 
 _QC.fillConfig := function(configlist)
     local r, retval, config;
@@ -76,15 +76,24 @@ _QC.Check := function(argtypes, func, configarg...)
             testSize := Minimum(Int(testCount/config.ramp)+1, config.limit);
             args := List(argtypes, {a} -> QC_MakeRandomArgument(a, rg, testSize));
             _QC.PreviousArguments := StructuralCopy(args);
-            breakOnError := BreakOnError;
-            BreakOnError := false;
+            if config.catchErrors then
+                breakOnError := BreakOnError;
+                BreakOnError := false;
+            fi;
             _QC.Function := func;
             _QC.Args := StructuralCopy(args);
             Unbind(_QC.Ret);
             instream := InputTextString("_QC.Ret := CallFuncListWrap(_QC.Function, _QC.Args);;");
-            READ_STREAM_LOOP(instream, OutputTextUser());
-            BreakOnError := breakOnError;
+            # READ_STREAM_LOOP gained extra argument in GAP 4.12
+            if NumberArgumentsFunction(READ_STREAM_LOOP) = 2 then
+                READ_STREAM_LOOP(instream, OutputTextUser());
+            else
+                READ_STREAM_LOOP(instream, OutputTextUser(), false);
+            fi;
             
+            if config.catchErrors then
+                BreakOnError := breakOnError;
+            fi;
             if IsBound(_QC.Ret) then
                 ret := _QC.Ret;
             else
@@ -137,7 +146,7 @@ end);
 InstallGlobalFunction(QC_CheckEqual,
     function(argtypes, funcL, funcR, configarg...)
         local funccheck, ret, savefailure;
-        
+
         savefailure := _QC.LastFailure;
         _QC.LastFailure := rec(funcs := [funcL, funcR]);
 
