@@ -12,6 +12,7 @@ PackageName := "QuickCheck",
 Subtitle := "Randomised Testing for GAP Functions",
 Version := "0.1",
 Date := "24/03/2019", # dd/mm/yyyy format
+License := "MPL-2.0",
 
 Persons := [
   rec(
