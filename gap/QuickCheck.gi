@@ -7,28 +7,41 @@
 QC_Skip := "SKIP TEST";
 
 # Store the generators we support
-QC_Filters := [];
+DeclareOperation("QC_Filters", [IsObject]);
 
 QC_RegisterFilterGen := function(filt, func)
-    Add(QC_Filters, [filt, func]);
+    InstallMethod(QC_Filters, [filt], function(x) return func; end);
 end;
 
 
 InstallGlobalFunction(QC_MakeRandomArgument,
     function(object, rg, limit)
-        local pos;
+        local func, warningLevel, loop, val;
         # Handle filter case
         if IsFilter(object) then
-            pos := PositionProperty(QC_Filters, {f} -> object=f[1]);
-            if pos = fail then
+            # Our usage of 'ApplicableMethodTypes' sometimes
+            # makes warnings at level 1, so turn off the warnings
+            warningLevel := InfoLevel(InfoWarning);
+            SetInfoLevel(InfoWarning, 0);
+            func := ApplicableMethodTypes(QC_Filters, [object]);
+            SetInfoLevel(InfoWarning, warningLevel);
+            if func = fail then
                 ErrorNoReturn("Filter with no random generator: ", object);
             fi;
-            return QC_Filters[pos][2](rg, limit);
+            for loop in [1..100] do
+                val := func(true)(rg, limit);
+                if object(val) then
+                    return val;
+                fi;
+            od;
+            ErrorNoReturn("Cannot make a value of type ", object);
         fi;
 
         if IsFunction(object) then
             return object(rg, limit);
         fi;
+
+        ErrorNoReturn("Cannot make an object of type ", object);
     end);
 
 _QC.defaultConfig := rec(tests := 500, limit := 9, ramp:= 30, seed := 1, catchErrors := true);

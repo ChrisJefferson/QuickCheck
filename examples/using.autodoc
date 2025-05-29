@@ -75,8 +75,6 @@ The currently allowed argument types for QuickCheck are:
 * IsInt : An integer
 * IsPosInt : A positive integer
 * IsNegInt : A negative integer
-* IsEvenInt : An even integer
-* IsOddInt : An odd integer
 
 * IsRat : Rational number
 * IsPosRat : Positive rational number
