@@ -2,8 +2,6 @@
 QC_RegisterFilterGen(IsInt, {rg, limit} -> Random(rg, [-limit..limit]));
 QC_RegisterFilterGen(IsPosInt, {rg, limit} -> Random(rg, [1..limit]));
 QC_RegisterFilterGen(IsNegInt, {rg, limit} -> Random(rg, [-limit..-1]));
-QC_RegisterFilterGen(IsEvenInt, {rg, limit} -> Random(rg, [-limit*2,-(limit-1)*2..limit*2]));
-QC_RegisterFilterGen(IsOddInt, {rg, limit} -> Random(rg, [-limit*2-1,-(limit-1)*2-1..limit*2-1]));
 QC_RegisterFilterGen(IsPerm, {rg, limit} -> Random(rg, SymmetricGroup(limit)));
 QC_RegisterFilterGen(IsTransformation, function(rg, limit)
     local len;
