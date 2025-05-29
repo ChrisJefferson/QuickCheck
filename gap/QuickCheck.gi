@@ -90,7 +90,7 @@ _QC.Check := function(argtypes, func, configarg...)
             else
                 READ_STREAM_LOOP(instream, OutputTextUser(), false);
             fi;
-            
+
             if config.catchErrors then
                 BreakOnError := breakOnError;
             fi;
@@ -100,7 +100,7 @@ _QC.Check := function(argtypes, func, configarg...)
                 ret := [];
             fi;
             CloseStream(instream);
-            Unbind(_QC.Ret); 
+            Unbind(_QC.Ret);
             # We leave _QC.Args and _QC.Function, so they can be returned by QC_LastFailure
 
             if IsEmpty(ret) then
@@ -154,7 +154,7 @@ InstallGlobalFunction(QC_CheckEqual,
             local retL, retR;
             retL := CallFuncListWrap(funcL, StructuralCopy(args));
             retR := CallFuncListWrap(funcR, args);
-            if retL = QC_Skip or retL = QC_Skip then
+            if retL = [QC_Skip] or retL = [QC_Skip] then
                 return QC_Skip;
             fi;
 

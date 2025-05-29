@@ -6,3 +6,5 @@ gap> QC_CheckEqual([IsPermGroup, IsPermGroup, IsPermGroup], {g1, g2, g3} -> Inte
 true
 gap> QC_Check([IsCyclic], {g} -> IsCyclic(g));
 true
+gap> QC_Check([QC_ElementOf(AlternatingGroup(7))], {p} -> LargestMovedPoint(p) <= 7);
+true

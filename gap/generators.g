@@ -11,6 +11,10 @@ QC_RegisterFilterGen(IsTransformation, function(rg, limit)
     return Transformation([1..len], x -> Random(rg, [1..len]));
     end);
 
+QC_RegisterFilterGen(IsRat, {rg,limit} -> Random(rg, [-limit..limit])/Random(rg,[1..limit]));
+QC_RegisterFilterGen(IsPosRat, {rg,limit} -> Random(rg, [1..limit])/Random(rg,[1..limit]));
+QC_RegisterFilterGen(IsNegRat, {rg,limit} -> Random(rg, [-limit..-1])/Random(rg,[1..limit]));
+
 # TODO: Improve greatly
 QC_RegisterFilterGen(IsPermGroup, function(rg, limit)
     local size, ret;
@@ -54,6 +58,12 @@ QC_SetOf := function(object)
             testlimit := testlimit - 1;
         od;
         return set;
+    end;
+end;
+
+QC_ElementOf := function(object)
+    return function(rg, limit)
+        return Random(rg, object);
     end;
 end;
 

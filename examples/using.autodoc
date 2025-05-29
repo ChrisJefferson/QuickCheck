@@ -77,9 +77,21 @@ The currently allowed argument types for QuickCheck are:
 * IsNegInt : A negative integer
 * IsEvenInt : An even integer
 * IsOddInt : An odd integer
+
+* IsRat : Rational number
+* IsPosRat : Positive rational number
+* IsNegRat : Negative rational number
+
 * IsPerm : A permutation
 * IsTransformation : A transformation
 * IsPermGroup : A permutation group
+
+There is also a generic function to take a random member from a collection:
+
+* QC_ElementOf(x) : Return a random member of the list x
+
+This can be used to take a random element of a small list of options ( like [1,2,3] ), or a random element of a collection which is not explictly listed above (like AlternatingGroup(7) ). The disadvantage of using QC_ElementOf is that it does not handle 'limit' well, but will instead take a random element from x.
+
 
 There are also ways of defining lists or sets of arguments, recursively:
 
