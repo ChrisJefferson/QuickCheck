@@ -29,6 +29,8 @@ QC_RegisterFilterGen(IsPermGroup, function(rg, limit)
     return Group(GeneratorsOfGroup(ret),());
 end);
 
+
+
 QC_ListOf := function(object)
     return function(rg, limit)
         return List([1..Random([0..limit])], {x} -> QC_MakeRandomArgument(object, rg, limit));

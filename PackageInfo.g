@@ -70,6 +70,13 @@ Dependencies := rec(
   ExternalConditions := [ ],
 ),
 
+Extensions := [
+  rec(
+    needed := [ ["digraphs", "1.0.0" ] ],
+    filename := "gap/digraphs.g",
+  )
+],
+
 AvailabilityTest := ReturnTrue,
 
 TestFile := "tst/testall.g",
