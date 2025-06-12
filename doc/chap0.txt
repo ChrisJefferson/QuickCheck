@@ -1,6 +1,6 @@
   
   
-                                  [1X QuickCheck [101X
+                                  [1X quickcheck [101X
   
   
                      [1X Randomised Testing for [5XGAP[105X Functions [101X
@@ -27,7 +27,7 @@
   -------------------------------------------------------
   
   
-  [1XContents (QuickCheck)[101X
+  [1XContents (quickcheck)[101X
   
   1 [33X[0;0YIntroduction[133X
   2 [33X[0;0YTutorial[133X

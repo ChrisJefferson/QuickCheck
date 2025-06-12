@@ -1,4 +1,4 @@
-name: QuickCheck
+name: quickcheck
 version: "1.0.0"
 license: "MPL-2.0"
 date: 2025-06-12
@@ -20,13 +20,13 @@ needed-pkgs:
       version: ">=1.1"
       url: "https://gap-packages.github.io/polycyclic/"
 
-www: https://github.com/ChrisJefferson/QuickCheck
-readme: QuickCheckREADME.md
-packageinfo: https://github.com/ChrisJefferson/QuickCheckPackageInfo.g
+www: https://gap-packages.github.io/quickcheck
+readme: README.md
+packageinfo: https://gap-packages.github.io/quickcheck/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/ChrisJefferson/QuickCheck/releases/download/v1.0.0/QuickCheck-1.0.0.tar.gz
+      url: https://github.com/gap-packages/quickcheck/releases/download/v1.0.0/quickcheck-1.0.0.tar.gz
 
 abstract: |
 
@@ -36,23 +36,25 @@ doc-pdf: doc/manual.pdf
 citeas: |
     <p class='BibEntry'>
     [<span class='BibKey'>Jef25</span>]   <b class='BibAuthor'>Jefferson, C.</b>,
-     <i class='BibTitle'>QuickCheck, Randomised Testing for GAP Functions,
+     <i class='BibTitle'>quickcheck, Randomised Testing for GAP Functions,
              Version 1.0.0</i>
      (<span class='BibYear'>2025</span>)<br />
     (<span class='BibNote'>GAP package</span>),
-    <span class='BibHowpublished'><a href="https://github.com/ChrisJefferson/QuickCheck">https://github.com/ChrisJefferson/QuickCheck</a></span>.
+    <span class='BibHowpublished'><a href="https://gap-packages.github.io/quickcheck">https://gap-packages.github.io/quickcheck</a></span>.
     </p>
     
 
 bibtex: |
-    @misc{ QuickCheck,
+    @misc{ quickcheck,
       author =           {Jefferson, C.},
-      title =            {{QuickCheck}, {Randomised Testing for GAP Functions}, {V}ersion 1.0.0},
+      title =            {{quickcheck},  {Randomised Testing for GAP Functions},
+                          {V}ersion 1.0.0},
       month =            {Jun},
       year =             {2025},
       note =             {GAP package},
-      howpublished =     {\href             {https://github.com/ChrisJefferson/QuickCheck}            {\texttt{https://github.com/}\discretionary
-                          {}{}{}\texttt{ChrisJefferson/}\discretionary {}{}{}\texttt{QuickCheck}}},
+      howpublished =     {\href      {https://gap-packages.github.io/quickcheck}
+                          {\texttt{https://gap\texttt{\symbol{45}}packages.github.io/}\discretionary
+                          {}{}{}\texttt{quickcheck}}},
       printedkey =       {Jef25}
     }
 
