@@ -1,6 +1,6 @@
 # QuickCheck for GAP
 
-[![Build Status](https://github.com/ChrisJefferson/QuickCheck/workflows/CI/badge.svg?branch=master)](https://github.com/ChrisJefferson/QuickCheck/actions?query=workflow%3ACI+branch%3Amaster)
+[![Build Status](https://github.com/gap-packages/quickcheck/workflows/CI/badge.svg?branch=master)](https://github.com/gap-packages/quickcheck/actions?query=workflow%3ACI+branch%3Amaster)
 
 This package provides a library for randomized, property-based testing in GAP, inspired by the QuickCheck framework found in languages like Haskell.
 
@@ -19,5 +19,5 @@ We are happy to expand the range of types that QuickCheck can generate. If you n
 ## Contact
 
 For any questions, bug reports, or feature requests, please post an issue at the GitHub repository:
-[https://github.com/ChrisJefferson/QuickCheck/issues](https://github.com/ChrisJefferson/QuickCheck/issues)
+[https://github.com/gap-packages/quickcheck/issues](https://github.com/gap-packages/quickcheck/issues)
 

@@ -8,7 +8,7 @@
 #
 SetPackageInfo( rec(
 
-PackageName := "QuickCheck",
+PackageName := "quickcheck",
 Subtitle := "Randomised Testing for GAP Functions",
 Version := "1.0.0",
 Date := "12/06/2025", # dd/mm/yyyy format
@@ -30,10 +30,10 @@ Persons := [
 
 SourceRepository := rec(
     Type := "git",
-    URL := "https://github.com/gap-packages/QuickCheck/",
+    URL := "https://github.com/gap-packages/quickcheck",
 ),
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
-PackageWWWHome  := ~.SourceRepository.URL,
+PackageWWWHome  := "https://gap-packages.github.io/quickcheck",
 PackageInfoURL  := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
 README_URL      := Concatenation( ~.PackageWWWHome, "README.md" ),
 ArchiveURL      := Concatenation( ~.SourceRepository.URL,
@@ -55,7 +55,7 @@ Status := "dev",
 AbstractHTML   :=  "",
 
 PackageDoc := rec(
-  BookName  := "QuickCheck",
+  BookName  := "quickcheck",
   ArchiveURLSubset := ["doc"],
   HTMLStart := "doc/chap0.html",
   PDFFile   := "doc/manual.pdf",

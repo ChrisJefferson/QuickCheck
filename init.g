@@ -4,4 +4,4 @@
 # Reading the declaration part of the package.
 #
 
-ReadPackage( "QuickCheck", "gap/QuickCheck.gd");
+ReadPackage( "quickcheck", "gap/quickcheck.gd");
