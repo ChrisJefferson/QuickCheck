@@ -82,4 +82,4 @@ DeclareGlobalFunction("QC_GetConfig");
 
 
 ## For private data
-_QC := rec();
+BindGlobal("_QC", rec());
