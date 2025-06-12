@@ -18,7 +18,7 @@ Persons := [
   rec(
     FirstNames := "Christopher",
     LastName := "Jefferson",
-    WWWHome := "http://heather.cafe/",
+    WWWHome := "https://heather.cafe/",
     Email := "caj21@st-andrews.ac.uk",
     IsAuthor := true,
     IsMaintainer := true,
