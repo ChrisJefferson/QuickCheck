@@ -30,7 +30,7 @@ Persons := [
 
 SourceRepository := rec(
     Type := "git",
-    URL := "https://github.com/ChrisJefferson/QuickCheck",
+    URL := "https://github.com/gap-packages/QuickCheck/",
 ),
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
 PackageWWWHome  := ~.SourceRepository.URL,
