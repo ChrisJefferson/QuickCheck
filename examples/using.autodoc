@@ -2,73 +2,84 @@
 
 @Section Using QuickCheck
 
-At its core, QuickCheck requires a user-generated function (or two functions if we are comparing
-if two functions behave the same), and the types of inputs that function requires.
+The idea behind QuickCheck is to write functions which should always return true, or two functions which should always return the same value. We then feed those functions many different inputs, and see if that behaviour holds.
 
-As an first example, let's test if GAP's integers are commutative -- if $a*b = b*a$. We first make a function which takes two arguments and returns `true` if the inputs are commutative. We then test this using `QC_Check`. `QC_Check` has two mandatory arguments, firstly the types of the arguments of the functions we want to test, and secondly the function to test.
+While this cannot detect all bugs, it can catch many issues. In particular, the code can catch issues with small inputs, or edge conditions. This tutorial will walk through the major functionality of the QuickCheck package through examples.
 
-@BeginExample
-testFunc := function(a,b)
-    return a*b = b*a;
-    end;;
+As a first example, let's test if GAP's integers are commutative -- that is if $a*b = b*a$. We first make a function which takes two arguments and returns `true` if the inputs are commutative. We test this using `QC_Check`. `QC_Check` has two mandatory arguments, firstly the types of the arguments of the functions we want to test, and secondly the function to test.
 
-QC_Check([IsInt, IsInt], testFunc);
-#! true
-@EndExample
+@BeginExampleSession
+gap> testFunc := function(a,b)
+>     return a*b = b*a;
+> end;;
+gap> QC_Check([IsInt, IsInt], testFunc);
+true
+@EndExampleSession
 
 Great! We can use the same function to test if other types are commutative:
 
-@BeginExample
-QC_Check([IsPerm, IsPerm], testFunc);
-#! Test 60 of 500 failed:
-#!  Input: [ (1,3), (1,3,2) ]
-#!  Output: false
-#! false
-@EndExample
+@BeginExampleSession
+gap> QC_Check([IsPerm, IsPerm], testFunc);
+Test 60 of 500 failed:
+ Input: [ (1,3), (1,3,2) ]
+ Output: false
+false
+@EndExampleSession
 
-Turns out multiplication of permutations is not commutative! This isn't a surprise of course...
+Turns out multiplication of permutations is not commutative! This isn't a surprise, of course...
 
-If we want to analyse those arguments, we can access them through `QC_LastFailure`
+If we want to analyse those arguments, we can access them through `QC_LastFailure`.
 
-@BeginExample
-QC_LastFailure();
-#! rec( args := [ (1,3), (1,3,2) ], func := function( a, b ) ... end )
-@EndExample
+@BeginExampleSession
+gap> QC_LastFailure();
+rec( args := [ (1,3), (1,3,2) ], func := function( a, b ) ... end )
+@EndExampleSession
 
-We can also write two functions, and test if they produce the same output. For example, lets compare two methods of intersecting groups -- GAP's optimised implementation and a "brute force" method which just finds the elements in both groups:
+Rather than running a single function and checking if it returns `true`, we can run two functions and test if they produce the same output. For example, let's compare two methods of intersecting groups -- GAP's optimised implementation and a "brute force" method which just finds the elements in both groups:
 
-@BeginExample
-slowIntersection := function(g,h)
-    return Group(Filtered(g, p -> p in h));
-end;
-
-QC_CheckEqual([IsPermGroup, IsPermGroup], Intersection, slowIntersection);
-#! true
-@EndExample
+@BeginExampleSession
+gap> slowIntersection := function(g,h)
+>      return Group(Filtered(g, p -> p in h));
+> end;;
+gap> QC_CheckEqual([IsPermGroup, IsPermGroup], Intersection, slowIntersection);
+true
+@EndExampleSession
 
 Could we be more efficient? How about if we just test which generators of `g` are in `h`?
 
-@BeginExample
-genIntersection := function(g,h)
-    return Group(Filtered(GeneratorsOfGroup(g), p -> p in h), ());
-end;
-
-QC_CheckEqual([IsPermGroup, IsPermGroup], Intersection, genIntersection);
-#! Test 97 of 500 failed:
-#!  Input: [ Group( [ (1,2,3), (2,3,4) ] ), Group( [ (1,4)(2,3), (1,2)(3,4) ] ) ]
-#!  Output: Return values differ: Group( [ (1,4)(2,3), (1,2)(3,4) ] ) and Group( () )
-#! false
-@EndExample
+@BeginLogSession
+gap> genIntersection := function(g,h)
+>    return Group(Filtered(GeneratorsOfGroup(g), p -> p in h), ());
+> end;;
+gap> QC_CheckEqual([IsPermGroup, IsPermGroup], Intersection, genIntersection);
+Test 97 of 500 failed:
+ Input: [ Group( [ (1,2,3), (2,3,4) ] ), Group( [ (1,4)(2,3), (1,2)(3,4) ] ) ]
+ Output: Return values differ: Group( [ (1,4)(2,3), (1,2)(3,4) ] ) and Group( () )
+false
+@EndLogSession
 
 No, unfortunately not! You may be surprised it took until test 97 to find this bug (you may also get different results). This is because QuickCheck starts by making many very small tests, which are fast to execute (finding this bad example takes less than a tenth of a second).
 
-In some cases we may be looking for a specific type of input, for example alternating groups. You can reject arguments given to the function be returning the special value `QC_Skip`.
+In some cases, the inputs given might not make sense for the function we are testing. For example, imagine we want to test if $b*(a/b) = a$. This statement isn't valid for $b=0$. We can skip invalid values by return the special value `QC_Skip`.
 
-Also, in some cases we might want to return an explanation of why a test failed. Rather than returning `false` from `QC_Equal`, we can instead return a string. Returning a string is treated as a failure, and the string is printed out to the user.
+@BeginExampleSession
+gap> checkDiv := function(a,b)
+>     if b = 0 then return QC_Skip; fi;
+>     return b*(a/b);
+> end;;
+gap> justA := function(a,b)
+> return a;
+> end;;
+gap> QC_CheckEqual([IsInt, IsInt], checkDiv, justA);
+true
+@EndExampleSession
+
+
+In some cases we might want to return an explanation of why a test failed. Rather than returning `false` from `QC_Equal`, you can instead return a string. Returning a string is treated as a failure, and the string is printed out to the user.
 
 @Section Valid argument types for QuickCheck
 
-The set of elements which can be given to QuickCheck tests is listed below. The list is always growing, and please submit an issue on github if you have any specific requests.
+The set of elements which can be given to QuickCheck tests is listed below. The list is always growing, and please submit an issue on GitHub if you have any specific requests.
 
 The currently allowed argument types for QuickCheck are:
 
@@ -84,11 +95,13 @@ The currently allowed argument types for QuickCheck are:
 * IsTransformation : A transformation
 * IsPermGroup : A permutation group
 
+* IsDigraph : A digraph (requires the Digraph package)
+
 There is also a generic function to take a random member from a collection:
 
 * QC_ElementOf(x) : Return a random member of the list x
 
-This can be used to take a random element of a small list of options ( like [1,2,3] ), or a random element of a collection which is not explictly listed above (like AlternatingGroup(7) ). The disadvantage of using QC_ElementOf is that it does not handle 'limit' well, but will instead take a random element from x.
+This can be used to take a random element of a small list of options ( like [1,2,3] ), or a random element of a collection which is not explicitly listed above (like AlternatingGroup(7) ). The disadvantage of using QC_ElementOf is that it does not handle 'limit' well, but will instead take a random element from x.
 
 
 There are also ways of defining lists or sets of arguments, recursively:
@@ -98,24 +111,23 @@ There are also ways of defining lists or sets of arguments, recursively:
 * QC_PairOf(x) : A pair of items of type x
 * QC_FixedLengthListOf(x, len) : A list of length len of items of type x
 
-In some cases this may not be sufficient -- for example an algorithm may require an integer which is not prime. The function can return the special value QC_Skip, which skips this test. If too many tests are skipped, the tester will eventually stop generating new arguments. For example, if we want to check the AlternatingGroup(n) is a strict subgroup of the SymmetricGroup(n) for n > 2.
+In some cases this may not be sufficient, for example an algorithm may require an integer which is not prime. The function can return the special value QC_Skip, which skips this test. If too many tests are skipped, the tester will eventually stop generating new arguments. For example, if we want to check the AlternatingGroup(n) is a strict subgroup of the SymmetricGroup(n) for n > 2.
 
-@BeginExample
-func := function(x)
-    local a, s;
-    if x < 2 then
-        return QC_Skip;
-    fi;
-    a := AlternatingGroup(x);
-    s := SymmetricGroup(x);
-    if not IsSubgroup(s, a) then return "Not a subgroup"; fi;
-    if s = a then return "Equal!"; fi;
-    return true;
-end;;
-
-QC_Check([IsInt], func);
-#! true
-@EndExample
+@BeginExampleSession
+gap> func := function(x)
+>     local a, s;
+>     if x < 2 then
+>         return QC_Skip;
+>     fi;
+>     a := AlternatingGroup(x);
+>     s := SymmetricGroup(x);
+>     if not IsSubgroup(s, a) then return "Not a subgroup"; fi;
+>     if s = a then return "Equal!"; fi;
+>     return true;
+> end;;
+gap> QC_Check([IsInt], func);
+true
+@EndExampleSession
 
 @Section Adding new types to QuickCheck
 
@@ -125,26 +137,24 @@ All value generators are a function which takes two arguments -- the first is a 
 
 For example, here are generators for a positive integer and a permutation.
 
-@BeginExample
-makePosInt := function(rs, limit)
-    return Random(rs, [1..limit]);
-end;
-
-makePerm := function(rs, limit)
-    return Random(rs, SymmetricGroup(limit));
-end;
-@EndExample
+@BeginExampleSession
+gap> makePosInt := function(rs, limit)
+>    return Random(rs, [1..limit]);
+> end;;
+gap> makePerm := function(rs, limit)
+>    return Random(rs, SymmetricGroup(limit));
+> end;;
+@EndExampleSession
 
 These functions can be used immediately in QC_Check:
 
-@BeginExample
-# Check a simple property of permutations
-QC_Check([makePosInt, makePerm, makePerm], {r,p1,p2} -> (r^p1)^p2 = r^(p1*p2));
-#! true
-@EndExample
+@BeginExampleSession
+gap> QC_Check([makePosInt, makePerm, makePerm], {r,p1,p2} -> (r^p1)^p2 = r^(p1*p2));
+true
+@EndExampleSession
 
-When defining methods and attributes in GAP, filters are often used, such as IsPermGroup, or IsInt. Functions for new filters are registered using the QC_RegisterFilterGen function.
+These functions can also be registered with the filter which they implement, using QC_RegisterFilterGen:
 
 @BeginLog
-QC_RegisterFilterGen(IsPosInt, makePosInt);
+gap> QC_RegisterFilterGen(IsPosInt, makePosInt);
 @EndLog

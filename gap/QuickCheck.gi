@@ -86,7 +86,7 @@ _QC.Check := function(argtypes, func, configarg...)
         skipCount := 0;
         while testCount < config.tests and skipCount < config.tests * 100 do
             # start with smaller sized tests
-            testSize := Minimum(Int(testCount/config.ramp)+1, config.limit);
+            testSize := Minimum(Int((testCount+skipCount)/config.ramp)+1, config.limit);
             args := List(argtypes, {a} -> QC_MakeRandomArgument(a, rg, testSize));
             _QC.PreviousArguments := StructuralCopy(args);
             if config.catchErrors then

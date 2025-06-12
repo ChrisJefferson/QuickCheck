@@ -10,8 +10,8 @@ SetPackageInfo( rec(
 
 PackageName := "QuickCheck",
 Subtitle := "Randomised Testing for GAP Functions",
-Version := "0.1",
-Date := "24/03/2019", # dd/mm/yyyy format
+Version := "0.6",
+Date := "04/06/2025", # dd/mm/yyyy format
 License := "MPL-2.0",
 
 Persons := [
@@ -64,7 +64,7 @@ PackageDoc := rec(
 ),
 
 Dependencies := rec(
-  GAP := ">= 4.9",
+  GAP := ">= 4.11",
   NeededOtherPackages := [ ["polycyclic", ">=1.1"] ],
   SuggestedOtherPackages := [ ],
   ExternalConditions := [ ],

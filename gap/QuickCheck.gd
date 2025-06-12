@@ -3,13 +3,19 @@
 #
 #! @Chapter Introduction
 #!
-#! QuickCheck is a package which tests a function by giving it
-#! many randomly generated inputs. It can either check one function returns
-#! 'true', or check two functions return the same value.
+#! QuickCheck is a property-based testing package for GAP that automatically
+#! validates functions against randomly generated inputs. The package can either
+#! verify that a function consistently returns 'true' across inputs, or confirm
+#! that two functions produce identical results for the same inputs.
 #!
-#! It is designed to provide a fast way to test a function with many inputs,
-#! including "boring" (but easy to get wrong) cases, such as empty lists, or the
-#! identity group.
+#! The strength of QuickCheck lies in its ability to rapidly test functions with
+#! diverse inputs, including edge cases that are often overlooked in manual testing,
+#! such as empty lists, trivial groups, or boundary values. By generating hundreds
+#! of test cases automatically, QuickCheck helps discover bugs and inconsistencies
+#! that might not be apparent from inspecting code or writing traditional tests.
+#!
+#! This approach is particularly valuable for mathematical algorithms and group
+#! theory implementations where exhaustive testing is impractical.
 #!
 #! @Chapter Tutorial
 #!
@@ -18,8 +24,7 @@
 #!
 #! @Section Methods
 #!
-#! This section will describe the example
-#! methods of QuickCheck
+#! This section will describe the methods of QuickCheck
 
 
 #! @Description
@@ -32,15 +37,14 @@ DeclareGlobalFunction("QC_MakeRandomArgument");
 
 
 #! @Description
-#! Run tests on <A>function</A>, whose arguments are described
+#! Run tests on <A>function</A> with arguments as described
 #! in <A>arguments</A>.
 #! @Arguments arguments, function[, config]
 DeclareGlobalFunction("QC_Check");
 
 #! @Description
-#! Check that, given the same list of arguments, functionL and functionR
-#! return the same value
-#! in <A>arguments</A>.
+#! Check that, given the same list of arguments as described in <A>arguments</A>,
+#! functionL and function return the same value.
 #! @Arguments arguments, functionL, functionR[, config]
 DeclareGlobalFunction("QC_CheckEqual");
 
@@ -55,7 +59,7 @@ DeclareGlobalFunction("QC_LastFailure");
 
 
 #! @Description
-#! Rerun the last test which failed. This is most useful of a test in a '.tst' file
+#! Rerun the last test which failed. This is most useful if a test in a '.tst' file
 #! failed, as this will allow the test to enter the break loop.
 DeclareGlobalFunction("QC_RerunLastFailure");
 
