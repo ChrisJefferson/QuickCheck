@@ -6,10 +6,10 @@
                      [1X Randomised Testing for [5XGAP[105X Functions [101X
   
   
-                                     1.0.0
+                                     1.0.1
   
   
-                                  12 June 2025
+                                  17 June 2025
   
   
                              Christopher Jefferson
@@ -18,7 +18,7 @@
   
   Christopher Jefferson
       Email:    [7Xmailto:caj21@st-andrews.ac.uk[107X
-      Homepage: [7Xhttp://heather.cafe/[107X
+      Homepage: [7Xhttps://heather.cafe/[107X
       Address:  [33X[0;14YJack  Cole  Building, North Haugh, St Andrews, Fife, KY16 9SX,
                 Scotland[133X
   

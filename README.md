@@ -21,3 +21,4 @@ We are happy to expand the range of types that QuickCheck can generate. If you n
 For any questions, bug reports, or feature requests, please post an issue at the GitHub repository:
 [https://github.com/gap-packages/quickcheck/issues](https://github.com/gap-packages/quickcheck/issues)
 
+All code in the `QuickCheck` package, unless otherwise stated, is licensed under the Mozilla Public License 2.0
